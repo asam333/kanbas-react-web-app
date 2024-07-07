@@ -273,7 +273,7 @@ export default function Lab1() {
             value="4" /><br />
 
           <label htmlFor="wd-text-fields-dob"> Date of birth: </label>
-          <input type="date"
+          <input 
             id="wd-text-fields-dob"
             value="2000-01-21" /><br />
         </form>
