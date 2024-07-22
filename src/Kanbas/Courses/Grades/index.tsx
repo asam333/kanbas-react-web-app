@@ -1,6 +1,7 @@
 import { CiSearch } from "react-icons/ci";
 import GradesControlButtons from "./GradesControlButtons";
 import { CiFilter } from "react-icons/ci";
+import GradesTable from "./GradesTables";
 
 export default function Grades() {
   return (
@@ -47,67 +48,7 @@ export default function Grades() {
         Apply Filters
       </button>
 
-      <table className="table table-bordered">
-        <thead>
-          <tr className="table-light">
-            <th>Student Name</th>
-            <th>A1 SETUP<br />Out of 100</th>
-            <th>A2 HTML<br />Out of 100</th>
-            <th>A3 CSS<br />Out of 100</th>
-            <th>A4 BOOTSTRAP<br />Out of 100</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="text-danger">Jane Adams</td>
-            <td>100%</td>
-            <td>96.67%</td>
-            <td>92.18%</td>
-            <td>66.22%</td>
-          </tr>
-          <tr className="table-light">
-            <td className="text-danger">Christina Allen</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-          </tr>
-          <tr>
-            <td className="text-danger">Samreen Ansari</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-          </tr>
-          <tr className="table-light">
-            <td className="text-danger">Han Bao</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>
-              <input
-                type="text"
-                defaultValue="88.03"
-                className="form-control"
-              />
-            </td>
-            <td>98.99%</td>
-          </tr>
-          <tr>
-            <td className="text-danger">Mahi Sai Srinivas Bobbili</td>
-            <td>100%</td>
-            <td>96.67%</td>
-            <td>98.37%</td>
-            <td>100%</td>
-          </tr>
-          <tr className="table-light">
-            <td className="text-danger">Siran Cao</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-          </tr>
-        </tbody>
-      </table>
+      <GradesTable />
     </div>
 
 

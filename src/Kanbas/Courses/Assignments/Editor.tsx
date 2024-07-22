@@ -1,11 +1,15 @@
 import { BorderStyle } from "react-bootstrap-icons";
+import { useParams } from "react-router";
+import * as db from "../../Database";
 
 export default function AssignmentEditor() {
+    const { aid } = useParams();
+    const assignment = db.assignments.find((assignment) => assignment._id === aid);
     return (
         <div id="wd-assignments-editor" className="container mt-5">
             <div className="mb-4">
                 <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-                <input id="wd-name" className="form-control" value="A1" />
+                <input id="wd-name" className="form-control" value={assignment && assignment.title} />
             </div>
             <div className="mb-4">
                 <textarea id="wd-description" className="form-control"
