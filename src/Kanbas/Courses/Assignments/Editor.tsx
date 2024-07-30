@@ -1,5 +1,4 @@
 import { useParams } from "react-router";
-import * as db from "../../Database";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
