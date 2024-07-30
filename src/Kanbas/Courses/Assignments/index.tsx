@@ -1,18 +1,24 @@
 import { FaPlus } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
-import { GripVertical} from "react-bootstrap-icons";
-import LessonControlButtons from "../Modules/LessonControlButtons";
+import { GripVertical } from "react-bootstrap-icons";
 import { MdNoteAlt } from "react-icons/md";
 import { IoMdArrowDropdown } from "react-icons/io";
 import AssignmentControlButtons from "./AssignmentControlButtons";
-import { useParams } from "react-router";
-import * as db from "../../Database";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector} from "react-redux";
+import ControlButtons from "./ControlButtons";
+import { deleteAssignment }
+    from "./reducer";
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div id="wd-assignments" className="container">
+
+
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="input-group" style={{ width: '300px' }}>
           <span className="input-group-text">
@@ -30,7 +36,7 @@ export default function Assignments() {
             <FaPlus className="me-1" />
             Group
           </button>
-          <button id="wd-add-assignment" className="btn btn-danger">
+          <button id="wd-add-assignment" className="btn btn-danger" onClick={() => navigate("newAssignment")}>
             <FaPlus className="me-1" />
             Assignment
           </button>
@@ -55,21 +61,25 @@ export default function Assignments() {
                       <GripVertical className="me-2 fs-3" />
                       <MdNoteAlt className="me-2 fs-3 text-success" />
                     </div>
-                    <div className="col-10">
+                    <div className="col-9">
                       <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} key={assignment._id} className="text-decoration-none">
                         <span className="wd-assignment-link fw-bold text-dark"
                           style={{ textDecoration: 'none' }}>
-                          {assignment._id}
+                          {assignment.title}
                         </span>
                         <br />
                         <span className="wd-assignment-due-date text-muted">
-                          Multiple Modules | <strong>Not available until</strong> May 6 at 12:00am |
-                          <br /> <strong>Due</strong> May 13 at 11:59pm | 100 pts
+                          Multiple Modules | <strong>Not available until</strong> {assignment.available} |
+                          <br /> <strong>Due</strong> {assignment.due} | {assignment.points} pts
                         </span>
                       </Link>
                     </div>
-                    <div className="col-1">
-                      <LessonControlButtons />
+                    <div className="col-2">
+                      <ControlButtons 
+                      AssignmentId = {assignment._id}
+                      deleteAssignment={() => {
+                        dispatch(deleteAssignment(assignment._id));
+                      }}/>
                     </div>
                   </div>
 
