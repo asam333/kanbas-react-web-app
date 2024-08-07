@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addAssignment, updateAssignment } from "./reducer";
+import * as client from "./client";
 
 
 export default function AssignmentEditor() {
@@ -20,9 +21,18 @@ export default function AssignmentEditor() {
             availableDate: "",
             dueDate: "",
             untilDate: "",
-            newAssignment: true,
+            isNewAssignment: true,
         });
     const dispatch = useDispatch();
+
+    const createAssignment = async (assignment: any) => {
+        await client.createAssignment(cid as string, assignment);
+        dispatch(addAssignment(assignment));
+    }
+    const saveAssignment = async (assignment: any) => {
+        await client.updateAssignment(assignment);
+        dispatch(updateAssignment(assignment));
+    }
 
     return (
         <div id="wd-assignments-editor">
@@ -161,12 +171,12 @@ export default function AssignmentEditor() {
                     Cancel
                 </Link>
                 <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-lg btn-danger ms-2" onClick={() => {
-                    if(assignment.newAssignment) {
-                        dispatch(addAssignment(assignment));
+                    if (assignment.isNewAssignment) {
+                        createAssignment({ ...assignment, isNewAssignment: false });
                     } else {
-                        dispatch(updateAssignment(assignment));
+                        saveAssignment(assignment);
                     }
-                    }}>
+                }}>
                     Save
                 </Link>
             </div>

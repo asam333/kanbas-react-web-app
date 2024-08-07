@@ -6,19 +6,31 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ControlButtons from "./ControlButtons";
-import { deleteAssignment }
-    from "./reducer";
+import { deleteAssignment, setAssignments }
+  from "./reducer";
+import * as client from "./client";
+import { useEffect } from "react";
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+  const removeAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
+
   return (
     <div id="wd-assignments" className="container">
-
-
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="input-group" style={{ width: '300px' }}>
           <span className="input-group-text">
@@ -75,11 +87,11 @@ export default function Assignments() {
                       </Link>
                     </div>
                     <div className="col-2">
-                      <ControlButtons 
-                      AssignmentId = {assignment._id}
-                      deleteAssignment={() => {
-                        dispatch(deleteAssignment(assignment._id));
-                      }}/>
+                      <ControlButtons
+                        AssignmentId={assignment._id}
+                        deleteAssignment={() => {
+                          removeAssignment(assignment._id);
+                        }} />
                     </div>
                   </div>
 
