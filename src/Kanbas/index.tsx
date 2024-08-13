@@ -72,5 +72,6 @@ export default function Kanbas() {
         </div>
       </Session>
     </Provider>
+    
   );
 }
