@@ -38,7 +38,7 @@ export default function Kanbas() {
 
   const updateCourse = async () => {
     await client.updateCourse(course);
-    setCourses(courses.map((c) => { return c._id == course._id ? course : c }))
+    setCourses(courses.map((c) => { return c._id === course._id ? course : c }))
   };
   return (
     <Provider store={store}>
@@ -72,6 +72,6 @@ export default function Kanbas() {
         </div>
       </Session>
     </Provider>
-    
+
   );
 }
