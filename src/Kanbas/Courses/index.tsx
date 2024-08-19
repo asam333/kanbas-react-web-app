@@ -9,6 +9,7 @@ import Grades from "./Grades";
 import PeopleTable from "./People/Table";
 import Quizzes from "./Quizzes";
 import QuizzesDetailsScreen from "./Quizzes/QuizzesDetailsScreen";
+import QuizDetailsEditor from "./Quizzes/QuizDetailsEditor";
 
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
@@ -36,6 +37,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
             <Route path="People/:uid" element={<PeopleTable />} />
             <Route path="Quizzes" element={<Quizzes />} />
             <Route path="Quizzes/:qid" element={<QuizzesDetailsScreen />} />
+            <Route path="Quizzes/:qid/Edit" element={<QuizDetailsEditor />} />
           </Routes>
         </div>
       </div>

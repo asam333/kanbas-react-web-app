@@ -6,9 +6,9 @@ export default function ControlButtons({quiz}: {quiz:any}) {
     return (
         <div>
             <button className="btn me-2 btn-secondary"
-                onClick={() => navigate(`/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}/preview`)}>Preview</button>
+                onClick={() => navigate(`/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}/Preview`)}>Preview</button>
             <button className="btn btn-secondary"
-                onClick={() => navigate(`/Kanbas/Courses/${quiz.course}/Quizzes/edit/${quiz._id}`)}>
+                onClick={() => navigate(`/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}/Edit`)}>
                 <FaPencilAlt className="me-2" />
                 Edit
             </button>

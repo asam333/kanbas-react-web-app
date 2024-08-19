@@ -17,3 +17,12 @@ export const updateQuizPublishStatus = async (quizId: string) => {
         .put(`${QUIZZES_API}/${quizId}/publish`);
     return response.data;
 }
+export const createQuiz = async (quiz: any) => {
+    const response = await axios.post(`${QUIZZES_API}`, quiz);
+    return response.data;
+}
+export const updateQuiz = async (quiz: any) => {
+    const response = await axios
+        .put(`${QUIZZES_API}/${quiz._id}`, quiz);
+    return response.data;
+}
