@@ -11,4 +11,5 @@ const store = configureStore({
         quizzesReducer,
     },
 });
+export type RootState = ReturnType<typeof store.getState>;
 export default store;

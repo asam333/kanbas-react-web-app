@@ -22,13 +22,15 @@ export default function Kanbas() {
   }, []);
 
   const [course, setCourse] = useState<any>({
-    _id: "0", name: "New Course", number: "New Number",
-    startDate: "2023-09-10", endDate: "2023-12-15",
-    image: "/images/reactjs.jpg", description: "New Description"
+    _id: "0", 
+    name: "NewCourse", 
+    number: new Date().getTime().toString(),
+    description: "New Description"
   });
 
-  const addNewCourse = async () => {
-    const newCourse = await client.createCourse(course);
+  const addNewCourse = async (userId: string) => {
+    const newCourse = await client.createCourse(course,userId);
+    console.log(newCourse);
     setCourses([...courses, newCourse]);
   };
   const deleteCourse = async (courseId: string) => {

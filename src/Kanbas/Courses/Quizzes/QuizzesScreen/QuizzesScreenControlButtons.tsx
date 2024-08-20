@@ -1,9 +1,11 @@
 import { CiSearch } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
 export default function QuizzesScreenControlButtons() {
     const navigate = useNavigate();
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     return (
         <div id="wd-quizzes-screen-control-buttons">
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -18,12 +20,14 @@ export default function QuizzesScreenControlButtons() {
                         placeholder="Search for Quiz"
                     />
                 </div>
-                <div>
-                    <button id="wd-add-quiz" className="btn btn-danger" onClick={() => navigate("newQuiz")}>
-                        <FaPlus className="me-1" />
-                        Quiz
-                    </button>
-                </div>
+                {currentUser.role === "FACULTY" &&
+                    <div>
+                        <button id="wd-add-quiz" className="btn btn-danger" onClick={() => navigate("newQuiz")}>
+                            <FaPlus className="me-1" />
+                            Quiz
+                        </button>
+                    </div>}
+
             </div>
             <hr />
         </div>

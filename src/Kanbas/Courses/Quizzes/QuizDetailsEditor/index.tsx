@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as client from "../client";
 import { addQuizToState, updateQuizToState } from '../reducer';
 import { format } from 'date-fns';
+import QuizQuestionsEditor from "./QuizQuestionEditor";
 type Quiz = {
     quizType: string;
     assignmentGroup: string;
@@ -22,23 +22,20 @@ type Quiz = {
     _id: string;
     name: string;
     course: string;
-    questions: any[];
     description?: string;
     points?: number;
     dueDate?: string;
     availableFrom?: string;
     availableUntil?: string;
     published: boolean;
-
-
 };
-
 
 export default function QuizDetailsEditor() {
     const { cid, qid } = useParams();
     const { quizzes } = useSelector((state: any) => state.quizzesReducer);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { pathname } = useLocation();
 
     const formatDateForInput = (dateString = '') => {
         if (!dateString) return '';
@@ -63,7 +60,6 @@ export default function QuizDetailsEditor() {
         _id: existingQuiz?._id || new Date().getTime().toString(),
         name: existingQuiz?.name || "unnamed quiz",
         course: existingQuiz?.course || cid!,
-        questions: existingQuiz?.questions || [],
         description: existingQuiz?.description || '',
         points: existingQuiz?.points || 0,
         dueDate: formatDateForInput(existingQuiz?.dueDate),
@@ -98,42 +94,42 @@ export default function QuizDetailsEditor() {
 
         setErrors(newErrors);
 
-        const questionErrors = quiz.questions.map(question => {
-            const baseErrors = {
-                title: !question.title.trim(),
-                points: question.points <= 0,
-                questionText: !question.questionText.trim(),
-            };
+        // const questionErrors = quiz.questions.map(question => {
+        //     const baseErrors = {
+        //         title: !question.title.trim(),
+        //         points: question.points <= 0,
+        //         questionText: !question.questionText.trim(),
+        //     };
 
-            switch (question.type) {
-                case 'multiple-choice':
-                    return {
-                        ...baseErrors,
-                        choices: question.choices.length === 0,
-                        correctAnswer: !question.choices.some((choice: { isCorrect: boolean }) => choice.isCorrect),
-                    };
-                case 'true-false':
-                    return baseErrors;
-                case 'fill-in-blank':
-                    return {
-                        ...baseErrors,
-                        correctAnswers: question.correctAnswers.length === 0 || question.correctAnswers.some((answer: { text: string }) => !answer.text.trim()),
-                    };
-                default:
-                    return baseErrors;
-            }
-        });
+        //     switch (question.type) {
+        //         case 'multiple-choice':
+        //             return {
+        //                 ...baseErrors,
+        //                 choices: question.choices.length === 0,
+        //                 correctAnswer: !question.choices.some((choice: { isCorrect: boolean }) => choice.isCorrect),
+        //             };
+        //         case 'true-false':
+        //             return baseErrors;
+        //         case 'fill-in-blank':
+        //             return {
+        //                 ...baseErrors,
+        //                 correctAnswers: question.correctAnswers.length === 0 || question.correctAnswers.some((answer: { text: string }) => !answer.text.trim()),
+        //             };
+        //         default:
+        //             return baseErrors;
+        //     }
+        // });
 
-        const hasQuestionErrors = questionErrors.some(errors => Object.values(errors).some(error => error));
+        // const hasQuestionErrors = questionErrors.some(errors => Object.values(errors).some(error => error));
 
-        if (Object.values(newErrors).some(error => error) || hasQuestionErrors) {
+        if (Object.values(newErrors).some(error => error)) {
             // If there are any errors, don't save
             alert("Please correct all errors before saving.");
             return;
         }
 
-        const totalPoints = quiz.questions.reduce((sum, question) => sum + (question.points || 0), 0);
-        const updatedQuiz = { ...quiz, points: totalPoints };
+        // const totalPoints = quiz.questions.reduce((sum, question) => sum + (question.points || 0), 0);
+        // const updatedQuiz = { ...quiz, points: totalPoints };
 
         if (qid && existingQuiz) {
             saveQuiz(quiz);
@@ -144,8 +140,7 @@ export default function QuizDetailsEditor() {
     };
 
     const cancel = async (quiz: any) => {
-        //await client.updateQuiz(quiz);
-        //dispatch(updateQuizInState(quiz));
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${pathname.includes("newQuiz") ? "" : qid}`);
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { id, value, type } = e.target;
@@ -450,29 +445,29 @@ export default function QuizDetailsEditor() {
                         </div>
                         <br /><br /><br /><br />
                     </div>
+                    <hr />
+                    <div className="d-flex justify-content-center mt-4">
+                        <button onClick={cancel} className="btn btn-secondary me-2">Cancel</button>
+                        <button onClick={handleSave} className="btn btn-primary btn-danger">Save</button>
+                    </div>
                 </div>
                 <div className="tab-pane fade" id="questions">
-                    <div className="container">
+                    {/* <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-md-6">
                                 <div className="d-flex mb-3">
-                                    <button
-                                        className="btn btn-secondary"
-                                    // onClick={() => addNewQuestion(selectedQuestionType)}
-                                    >
+                                    <button className="btn btn-secondary"
+                                        onClick={() => navigate("newQuestion")}>
                                         + New Question
                                     </button>
                                 </div>
                             </div>
 
                         </div>
-                    </div>
+                    </div> */}
+                    <QuizQuestionsEditor />
                 </div>
-                <hr />
-                <div className="d-flex justify-content-center mt-4">
-                    <button onClick={cancel} className="btn btn-secondary me-2">Cancel</button>
-                    <button onClick={handleSave} className="btn btn-primary btn-danger">Save</button>
-                </div>
+
 
             </div>
 

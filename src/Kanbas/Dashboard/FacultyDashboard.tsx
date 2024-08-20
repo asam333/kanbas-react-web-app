@@ -1,19 +1,23 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "../store";
 export default function FacultyDashboard(
     { courses, course, setCourse, addNewCourse,
         deleteCourse, updateCourse }: {
             courses: any[]; course: any; setCourse: (course: any) => void;
-            addNewCourse: () => void; deleteCourse: (course: any) => void;
+            addNewCourse: (userId: string) => void; deleteCourse: (course: any) => void;
             updateCourse: () => void;
         }
 ) {
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+
     return (
         <div id="wd-faculty-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
             <h5>New Course
                 <button className="btn btn-primary float-end"
                     id="wd-add-new-course-click"
-                    onClick={addNewCourse} > Add </button>
+                    onClick={() => addNewCourse(currentUser._id)} > Add </button>
                 <button className="btn btn-warning float-end me-2"
                     id="wd-add-new-course-click"
                     onClick={updateCourse} > Update </button>
