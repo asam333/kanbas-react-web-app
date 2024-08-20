@@ -5,6 +5,8 @@ import * as client from "../client";
 import { addQuizToState, updateQuizToState } from '../reducer';
 import { format } from 'date-fns';
 import QuizQuestionsEditor from "./QuizQuestionEditor";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 type Quiz = {
     quizType: string;
     assignmentGroup: string;
@@ -13,6 +15,7 @@ type Quiz = {
     timeLimitEntry: number;
     attemptLimit: number;
     allowMultipleAttempts: boolean;
+    multipleAttempts: number,
     showCorrectedAnswers: boolean;
     accessCode: boolean;
     accessCodeEntry: number;
@@ -51,6 +54,7 @@ export default function QuizDetailsEditor() {
         timeLimitEntry: existingQuiz?.timeLimitEntry || 20,
         attemptLimit: existingQuiz?.attemptLimit || 1,
         allowMultipleAttempts: existingQuiz?.allowMultipleAttempts ?? false,
+        multipleAttempts: existingQuiz?.allowMultipleAttempts ?? 1,
         showCorrectedAnswers: existingQuiz?.showCorrectedAnswers ?? false,
         accessCode: existingQuiz?.accessCode ?? false,
         accessCodeEntry: existingQuiz?.accessCodeEntry || 0,
@@ -94,34 +98,6 @@ export default function QuizDetailsEditor() {
 
         setErrors(newErrors);
 
-        // const questionErrors = quiz.questions.map(question => {
-        //     const baseErrors = {
-        //         title: !question.title.trim(),
-        //         points: question.points <= 0,
-        //         questionText: !question.questionText.trim(),
-        //     };
-
-        //     switch (question.type) {
-        //         case 'multiple-choice':
-        //             return {
-        //                 ...baseErrors,
-        //                 choices: question.choices.length === 0,
-        //                 correctAnswer: !question.choices.some((choice: { isCorrect: boolean }) => choice.isCorrect),
-        //             };
-        //         case 'true-false':
-        //             return baseErrors;
-        //         case 'fill-in-blank':
-        //             return {
-        //                 ...baseErrors,
-        //                 correctAnswers: question.correctAnswers.length === 0 || question.correctAnswers.some((answer: { text: string }) => !answer.text.trim()),
-        //             };
-        //         default:
-        //             return baseErrors;
-        //     }
-        // });
-
-        // const hasQuestionErrors = questionErrors.some(errors => Object.values(errors).some(error => error));
-
         if (Object.values(newErrors).some(error => error)) {
             // If there are any errors, don't save
             alert("Please correct all errors before saving.");
@@ -136,11 +112,35 @@ export default function QuizDetailsEditor() {
         } else {
             createQuiz(quiz);
         }
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${pathname.includes("newQuiz") ? "" : qid}`);
+    };
+    const handleSaveAndPublish = () => {
+        const newErrors = {
+            title: !quiz.name.trim(),
+            dueDate: !quiz.dueDate,
+            availableFrom: !quiz.availableFrom,
+            availableUntil: !quiz.availableUntil,
+        };
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some(error => error)) {
+            alert("Please correct all errors before saving.");
+            return;
+        }
+
+        const updatedQuiz = { ...quiz, published: true };
+
+        if (qid && existingQuiz) {
+            saveQuiz(updatedQuiz);
+        } else {
+            createQuiz(updatedQuiz);
+        }
         navigate(`/Kanbas/Courses/${cid}/quizzes`);
     };
 
     const cancel = async (quiz: any) => {
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/${pathname.includes("newQuiz") ? "" : qid}`);
+        navigate(`/Kanbas/Courses/${cid}/quizzes`);
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { id, value, type } = e.target;
@@ -184,10 +184,28 @@ export default function QuizDetailsEditor() {
                         </div>
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="description" className="form-label">
-                            Quiz Instructions
-                        </label>
-                        <textarea className="form-control" id="description" rows={7} cols={30} />
+                        <label>Quiz Instructions</label>
+                        <ReactQuill
+                            value={quiz.description}
+                            modules={{
+                                toolbar: [
+                                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                                    [{ size: [] }],
+                                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                    [{ 'list': 'ordered' }, { 'list': 'bullet' },
+                                    { 'indent': '-1' }, { 'indent': '+1' }],
+                                    ['link', 'image', 'video'],
+                                    ['clean']
+                                ],
+                            }}
+                            formats={[
+                                'header', 'font', 'size',
+                                'bold', 'italic', 'underline', 'strike', 'blockquote',
+                                'list', 'bullet', 'indent',
+                                'link', 'image', 'video'
+                            ]}
+                            className="mb-4"
+                        />
                     </div>
 
                     <div className="row mb-3 align-items-left">
@@ -310,6 +328,18 @@ export default function QuizDetailsEditor() {
                                 <label className="form-check-label me-4"
                                     htmlFor="allowMultipleAttempts">
                                     Allow Multiple Attempts
+                                </label>
+                                <input
+                                    id="multipleAttempts"
+                                    type="number"
+                                    value={quiz.multipleAttempts}
+                                    onChange={(e) => setQuiz({ ...quiz, multipleAttempts: Number(e.target.value) })}
+                                    className="form-control me-2"
+                                    defaultValue={20}
+                                    style={{ width: '80px' }}
+                                />
+                                <label htmlFor="multipleAttempts">
+                                    Attempts
                                 </label>
                             </div>
                         </div>
@@ -448,23 +478,11 @@ export default function QuizDetailsEditor() {
                     <hr />
                     <div className="d-flex justify-content-center mt-4">
                         <button onClick={cancel} className="btn btn-secondary me-2">Cancel</button>
-                        <button onClick={handleSave} className="btn btn-primary btn-danger">Save</button>
+                        <button onClick={handleSave} className="btn btn-primary btn-danger me-2">Save</button>
+                        <button onClick={handleSaveAndPublish} className="btn btn-primary btn-danger">Save&Publish</button>
                     </div>
                 </div>
                 <div className="tab-pane fade" id="questions">
-                    {/* <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-md-6">
-                                <div className="d-flex mb-3">
-                                    <button className="btn btn-secondary"
-                                        onClick={() => navigate("newQuestion")}>
-                                        + New Question
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div> */}
                     <QuizQuestionsEditor />
                 </div>
 

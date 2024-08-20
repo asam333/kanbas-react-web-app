@@ -65,7 +65,7 @@ export default function QuizzesDetailsScreen() {
                 </div>
                 <div className="quiz-details-multiple-attempts-times row">
                     <h5 className="col-md-4 text-end text-dark font-weight-bold"><b>Multiple Attempts Times</b></h5>
-                    <p className="col-md-6">{quiz.allowMultipleAttempts ? quiz.MultipleAttempts : 'Null'}</p>
+                    <p className="col-md-6">{quiz.allowMultipleAttempts ? quiz.multipleAttempts : 'Null'}</p>
                 </div>
                 <div className="quiz-details-show-correct-answers row">
                     <h5 className="col-md-4 text-end text-dark font-weight-bold"><b>Show Correct Answers</b></h5>

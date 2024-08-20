@@ -16,14 +16,13 @@ interface QuizQuestion {
     points: number;
     editMode: boolean;
     choices?: Choice[];
-    correctAnswer?: boolean; // For True/False questions
-    fillInBlankAnswers?: string[]; // For Fill in the Blanks questions
+    correctAnswer?: boolean;
+    fillInBlankAnswers?: string[];
 }
 
 export default function QuizQuestionsEditor() {
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
     const [newQuestionId, setNewQuestionId] = useState(1);
-    const [activeTab, setActiveTab] = useState('questions');
 
     const addNewQuestion = () => {
         const newQuestion: QuizQuestion = {
@@ -34,7 +33,7 @@ export default function QuizQuestionsEditor() {
             points: 1,
             editMode: true,
             choices: [{ text: '', isCorrect: false }],
-            fillInBlankAnswers: [], // Initialize an empty array for Fill in the Blanks answers
+            fillInBlankAnswers: [],
         };
         setQuestions([...questions, newQuestion]);
         setNewQuestionId(newQuestionId + 1);
@@ -97,17 +96,11 @@ export default function QuizQuestionsEditor() {
         setQuestions(updatedQuestions);
     };
 
-    const calculateTotalPoints = () => {
-        return questions.reduce((total, question) => total + question.points, 0);
-    };
-
     const handleSave = () => {
-        // Implement save logic here, for example, saving to a backend or local storage
         console.log('Questions saved:', questions);
     };
 
     const handleCancel = () => {
-        // Implement cancel logic here
         setQuestions([]);
         setNewQuestionId(1);
     };
