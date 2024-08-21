@@ -1,17 +1,13 @@
-import { IoEllipsisVertical } from "react-icons/io5";
-import { BsPlus } from "react-icons/bs";
-export default function ModuleControlButtons() {
+import React from 'react';
+import {IoEllipsisVertical} from "react-icons/io5";
+import {FaPlus} from "react-icons/fa6";
+
+export default function AssignmentControlButtons() {
     return (
         <div className="float-end">
-            <input type="text" value="40% of Total" readOnly 
-            style={{
-                border: '1px solid black', 
-                backgroundColor: 'transparent',
-                borderRadius: '10px',
-                width: '120px',
-              }}/>
-            <BsPlus className="fs-4" />
-            <IoEllipsisVertical className="fs-4" />
+            <button type="button" className="btn btn-light btn-sm me-2" style={{borderRadius:'20px'}}>40% of Total</button>
+            <FaPlus/>
+            <IoEllipsisVertical className="fs-4"/>
         </div>
     );
 }
